@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:alpine
+    container_name: postgre_kfcrazy_container
+    environment:
+      POSTGRES_DB: kfcrazyDB
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: pass123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: java_app_container
+    depends_on:
+      - db
+    env_file:
+      - environment/.env
+    ports:
+      - "8080:8080"
+    volumes:
+      - app_data:/app/data
+
+volumes:
+  postgres_data:
+  app_data:
