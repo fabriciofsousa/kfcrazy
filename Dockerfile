@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . /app
 
-RUN mvn clean install package
+RUN mvn clean package
 
 FROM openjdk:17-jdk-slim
 

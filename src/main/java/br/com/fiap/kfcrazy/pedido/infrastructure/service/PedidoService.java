@@ -3,6 +3,7 @@ package br.com.fiap.kfcrazy.pedido.infrastructure.service;
 import br.com.fiap.kfcrazy.pedido.application.dto.request.PedidoRequestDTO;
 import br.com.fiap.kfcrazy.pedido.application.dto.response.ResponseDTO;
 import br.com.fiap.kfcrazy.pedido.domain.model.Pedido;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;

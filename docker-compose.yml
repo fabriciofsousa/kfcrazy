@@ -3,11 +3,11 @@ version: '3.9'
 services:
   db:
     image: postgres:alpine
-    container_name: postgre_kfcrazy_container
+    container_name: "postgre_kfcrazy_container"
     environment:
-      POSTGRES_DB: kfcrazyDB
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: "kfcrazyDB"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "pass123"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -20,8 +20,10 @@ services:
     container_name: java_app_container
     depends_on:
       - db
-    env_file:
-      - environment/.env
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/kfcrazyDB"
+      SPRING_DATASOURCE_USERNAME: "admin"
+      SPRING_DATASOURCE_PASSWORD: "pass123"
     ports:
       - "8080:8080"
     volumes:
