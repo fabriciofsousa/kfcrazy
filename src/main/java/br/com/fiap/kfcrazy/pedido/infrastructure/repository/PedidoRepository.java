@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, String> {
 
-    Optional<Pedido> findById(String id);
+    Optional<Pedido> findById(Long id);
 
-    void deleteById(String id);
+    void deleteById(Long id);
 }

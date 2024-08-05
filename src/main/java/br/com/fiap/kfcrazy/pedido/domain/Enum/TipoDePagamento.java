@@ -1,12 +1,7 @@
 package br.com.fiap.kfcrazy.pedido.domain.Enum;
 
 public enum TipoDePagamento {
-    CARTAO_DE_CREDITO("Cartão de Crédito"),
-    CARTAO_DE_DEBITO("Cartão de Débito"),
-    BOLETO_BANCARIO("Boleto Bancário"),
-    PIX("PIX"),
-    PAYPAL("PayPal"),
-    TRANSFERENCIA_BANCARIA("Transferência Bancária");
+    QR_CODE("QR Code");
 
     private String descricao;
 

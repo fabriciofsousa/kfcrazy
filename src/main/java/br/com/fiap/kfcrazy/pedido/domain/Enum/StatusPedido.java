@@ -1,11 +1,14 @@
 package br.com.fiap.kfcrazy.pedido.domain.Enum;
 
 public enum StatusPedido {
-    AGUARDANDO_PAGAMENTO("Aguardando Pagamento"),
-    EM_PROCESSAMENTO("Em Processamento"),
-    ENVIADO("Enviado"),
-    ENTREGUE("Entregue"),
-    CANCELADO("Cancelado");
+    RECEBIDO("Recebido"),
+    EM_PREPARACAO("Em Preparação"),
+    PRONTO("Pronto"),
+    FINALIZADO("Finalizado"),
+
+    CANCELADO("Cancelado"),
+
+    EM_PROCESSAMENTO("Em processamento");
 
     private String descricao;
 

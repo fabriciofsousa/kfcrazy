@@ -1,56 +1,56 @@
 package br.com.fiap.kfcrazy.pedido.domain.model;
 
-
+import br.com.fiap.kfcrazy.Produto.domain.model.Produto;
+import br.com.fiap.kfcrazy.cliente.domain.model.Cliente;
+import br.com.fiap.kfcrazy.pagamento.domain.model.Pagamento;
 import br.com.fiap.kfcrazy.pedido.domain.Enum.StatusPagamento;
 import br.com.fiap.kfcrazy.pedido.domain.Enum.StatusPedido;
 import br.com.fiap.kfcrazy.pedido.domain.Enum.TipoDePagamento;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Data
+@Table(name = "pedido")
 public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String idCarrinho;
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
 
-    private TipoDePagamento tipo;
-
-    @Column(nullable = false)
-    private double valorTotal;
-
-    @Column(nullable = false)
-    private Date dataTransacao;
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Produto> produtos;
 
     @Column(nullable = false)
+    private BigDecimal valorTotal;
+
+    @Column(nullable = false)
+    private LocalDateTime dataTransacao;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_pagamento", nullable = false)
     private StatusPagamento statusPagamento;
 
-    @Column(nullable = true)
-    private String numeroCartao;
-
-    @Column(nullable = true)
-    private String dataValidadeCartao;
-
-    @Column(nullable = true)
-    private String codigoSeguranca;
-
-    @Column(nullable = true)
-    private String codigoBoleto;
-
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String formaEntrega;
+    private TipoDePagamento tipo;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_pedido", nullable = false)
     private StatusPedido statusPedido;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "pagamento_id", referencedColumnName = "id")
+    private Pagamento pagamento;
 }
