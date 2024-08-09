@@ -5,8 +5,8 @@ services:
     image: postgres:alpine
     container_name: "postgre_kfcrazy_container"
     environment:
-      POSTGRES_DB: "kfcrazyDB"
-      POSTGRES_USER: "admin"
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "pass123"
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -21,8 +21,8 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/kfcrazyDB"
-      SPRING_DATASOURCE_USERNAME: "admin"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/postgres"
+      SPRING_DATASOURCE_USERNAME: "postgres"
       SPRING_DATASOURCE_PASSWORD: "pass123"
     ports:
       - "8080:8080"
