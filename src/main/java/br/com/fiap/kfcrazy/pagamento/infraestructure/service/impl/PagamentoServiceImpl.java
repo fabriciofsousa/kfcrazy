@@ -70,21 +70,4 @@ public class PagamentoServiceImpl implements PagamentoService {
         return pagamentoRepository.findById(id);
     }
 
-    @Override
-    public Pagamento update(Long id, Pagamento pagamento) {
-        Optional<Pagamento> pagamentoOptional = pagamentoRepository.findById(id);
-        if (pagamentoOptional.isPresent()) {
-            Pagamento pagamentoExistente = pagamentoOptional.get();
-            pagamentoExistente.setDescricao(pagamento.getDescricao());
-            pagamentoExistente.setValor(pagamento.getValor());
-            pagamentoExistente.setQrCode(pagamento.getQrCode());
-            return pagamentoRepository.save(pagamentoExistente);
-        }
-        return null;
-    }
-
-    @Override
-    public void delete(Long id) {
-        pagamentoRepository.deleteById(id);
-    }
 }

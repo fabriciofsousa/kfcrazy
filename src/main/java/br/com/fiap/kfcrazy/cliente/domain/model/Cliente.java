@@ -1,5 +1,6 @@
 package br.com.fiap.kfcrazy.cliente.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 

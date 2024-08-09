@@ -55,23 +55,4 @@ public class PagamentoController {
         return new ResponseEntity<>(pagamentos, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
-    @Operation(description = "Atualizar pagamento por ID")
-    public ResponseEntity<Pagamento> atualizarPagamento(@PathVariable("id") Long id, @RequestBody Pagamento pagamento) {
-        Pagamento updatedPagamento = pagamentoService.update(id, pagamento);
-        if (updatedPagamento != null) {
-            return new ResponseEntity<>(updatedPagamento, HttpStatus.OK);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @Operation(description = "Deletar pagamento por ID")
-    public ResponseEntity<Void> deletarPagamento(@PathVariable("id") Long id) {
-        pagamentoService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
 }

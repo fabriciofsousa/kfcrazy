@@ -4,10 +4,11 @@ import br.com.fiap.kfcrazy.cliente.domain.model.Cliente;
 import br.com.fiap.kfcrazy.pedido.domain.model.Pedido;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ClienteService {
     Cliente criarCliente(Cliente cliente);
-    Cliente atualizarCliente(Long id, Cliente cliente);
-    void deletarCliente(Long id);
     List<Cliente> listarClientes();
+
+    Optional<Cliente> findByCpf(String cpf);
 }

@@ -19,7 +19,4 @@ public interface PagamentoService {
 
     Optional<Pagamento> findById(Long id);
 
-    Pagamento update(Long id, Pagamento pagamento);
-
-    void delete(Long id);
 }

@@ -1,8 +1,12 @@
 package br.com.fiap.kfcrazy.pedido.application.controller;
 
+import br.com.fiap.kfcrazy.pedido.application.dto.request.PedidoRequestDTO;
 import br.com.fiap.kfcrazy.pedido.domain.model.Pedido;
 import br.com.fiap.kfcrazy.pedido.infrastructure.service.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -22,7 +26,67 @@ public class PedidoController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    @Operation(description = "Iniciar um novo pedido")
+    @Operation(summary = "Cria um novo pedido",
+            description = "Cria um novo pedido com os detalhes fornecidos.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            schema = @Schema(implementation = PedidoRequestDTO.class),
+                            examples = @ExampleObject(
+                                    name = "Exemplo de Pedido",
+                                    summary = "Exemplo de criação de um pedido com hambúrguer clássico e refrigerante",
+                                    value = "{\n" +
+                                            "  \"cliente\": {\n" +
+                                            "    \"cpf\": \"12345678901\",\n" +
+                                            "    \"nome\": \"Marcelo de Nobrega\",\n" +
+                                            "    \"email\": \"marcelo.de.nobrega@gmail.com\"\n" +
+                                            "  },\n" +
+                                            "  \"produtos\": [\n" +
+                                            "    {\n" +
+                                            "      \"categoria\": \"LANCHE\",\n" +
+                                            "      \"nome\": \"Hambúrguer Clássico\",\n" +
+                                            "      \"descricao\": \"Hambúrguer com carne, queijo, alface e tomate, servido com pão fresco.\",\n" +
+                                            "      \"preco\": 50.80,\n" +
+                                            "      \"ingredientes\": [\n" +
+                                            "        {\n" +
+                                            "          \"nome\": \"Carne de Bovino\",\n" +
+                                            "          \"quantidade\": 1\n" +
+                                            "        },\n" +
+                                            "        {\n" +
+                                            "          \"nome\": \"Queijo Cheddar\",\n" +
+                                            "          \"quantidade\": 2\n" +
+                                            "        },\n" +
+                                            "        {\n" +
+                                            "          \"nome\": \"Alface\",\n" +
+                                            "          \"quantidade\": 1\n" +
+                                            "        },\n" +
+                                            "        {\n" +
+                                            "          \"nome\": \"Tomate\",\n" +
+                                            "          \"quantidade\": 3\n" +
+                                            "        },\n" +
+                                            "        {\n" +
+                                            "          \"nome\": \"Pão de Hambúrguer\",\n" +
+                                            "          \"quantidade\": 2\n" +
+                                            "        }\n" +
+                                            "      ]\n" +
+                                            "    },\n" +
+                                            "    {\n" +
+                                            "      \"categoria\": \"BEBIDA\",\n" +
+                                            "      \"nome\": \"Coca Cola Lata\",\n" +
+                                            "      \"descricao\": \"Refrigerante de coca cola em lata, 350ml.\",\n" +
+                                            "      \"preco\": 7.00,\n" +
+                                            "      \"ingredientes\": [\n" +
+                                            "        {\n" +
+                                            "          \"nome\": \"Lata de coca cola\",\n" +
+                                            "          \"quantidade\": 1\n" +
+                                            "        }\n" +
+                                            "      ]\n" +
+                                            "    }\n" +
+                                            "  ]\n" +
+                                            "}"
+                            )
+                    )
+            )
+    )
     public ResponseEntity<Pedido> iniciarPedido(@RequestBody @Valid Pedido pedido) {
         Pedido createdPedido = pedidoService.create(pedido);
         return new ResponseEntity<>(createdPedido, HttpStatus.CREATED);
@@ -42,14 +106,6 @@ public class PedidoController {
     public ResponseEntity<Pedido> findById(@PathVariable("id") Long id) {
         Pedido pedido = pedidoService.findById(id);
         return new ResponseEntity<>(pedido, HttpStatus.OK);
-    }
-
-    @PutMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
-    @Operation(description = "Atualizar pedido por ID")
-    public ResponseEntity<Pedido> update(@RequestBody Pedido pedido, @PathVariable("id") Long id) throws Exception {
-        Pedido updatedPedido = pedidoService.update(id, pedido);
-        return new ResponseEntity<>(updatedPedido, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

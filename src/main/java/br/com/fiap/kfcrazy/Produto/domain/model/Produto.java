@@ -1,11 +1,15 @@
 package br.com.fiap.kfcrazy.Produto.domain.model;
 
-import br.com.fiap.kfcrazy.pedido.domain.Enum.CategoriaProduto;
+import br.com.fiap.kfcrazy.Produto.domain.Enum.CategoriaProduto;
 import br.com.fiap.kfcrazy.pedido.domain.model.Pedido;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,6 +17,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Entity
 @Data
+@EqualsAndHashCode
 public class Produto {
 
     @Id
@@ -32,7 +37,8 @@ public class Produto {
     @Column(nullable = false)
     private BigDecimal preco;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pedido_id", nullable = false)
-    private Pedido pedido;
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    @EqualsAndHashCode.Exclude
+    private List<Ingrediente> ingredientes;
 }

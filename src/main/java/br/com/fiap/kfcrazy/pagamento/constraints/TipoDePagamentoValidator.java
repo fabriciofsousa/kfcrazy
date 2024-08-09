@@ -1,6 +1,6 @@
 package br.com.fiap.kfcrazy.pagamento.constraints;
 
-import br.com.fiap.kfcrazy.pedido.domain.Enum.TipoDePagamento;
+import br.com.fiap.kfcrazy.pagamento.domain.Enum.TipoDePagamento;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

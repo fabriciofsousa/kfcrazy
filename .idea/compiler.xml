@@ -8,10 +8,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="kycrazy" />
+        <module name="kfcrazy" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="kfcrazy" target="17" />
+      <module name="kfcrazy" target="1.6" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

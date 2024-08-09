@@ -1,6 +1,6 @@
 package br.com.fiap.kfcrazy.preparacao.infraestructure.service.impl;
 
-import br.com.fiap.kfcrazy.pedido.domain.Enum.StatusPagamento;
+import br.com.fiap.kfcrazy.pagamento.domain.Enum.StatusPagamento;
 import br.com.fiap.kfcrazy.pedido.domain.Enum.StatusPedido;
 import br.com.fiap.kfcrazy.pedido.domain.model.Pedido;
 import br.com.fiap.kfcrazy.pedido.infrastructure.repository.PedidoRepository;

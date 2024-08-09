@@ -1,6 +1,6 @@
 package br.com.fiap.kfcrazy.pagamento.domain.model;
 
-import br.com.fiap.kfcrazy.pedido.domain.Enum.StatusPagamento;
+import br.com.fiap.kfcrazy.pagamento.domain.Enum.StatusPagamento;
 import jakarta.persistence.*;
 import lombok.*;
 
