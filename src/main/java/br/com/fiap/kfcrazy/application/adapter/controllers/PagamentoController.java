@@ -18,7 +18,7 @@ import java.util.Optional;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/pagamentos")
-@Tag(name = "Pagamento (em construcao)", description = "Operações relacionadas a pagamentos")
+@Tag(name = "Pagamento (Em Construção)", description = "Operações relacionadas a pagamentos")
 public class PagamentoController {
 
     private final PagamentoServicePort pagamentoServicePort;

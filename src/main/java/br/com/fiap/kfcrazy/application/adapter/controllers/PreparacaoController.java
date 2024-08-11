@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/preparacao")
 @RequiredArgsConstructor
-@Tag(name = "Preparação (em construcao)", description = "Operações relacionadas a Preparação do pedido")
+@Tag(name = "Preparação (Em Construção)", description = "Operações relacionadas a Preparação do pedido")
 public class PreparacaoController {
 
     private final PreparacaoServicePort preparacaoServicePort;
