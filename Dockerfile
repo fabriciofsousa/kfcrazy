@@ -6,7 +6,7 @@ COPY . /app
 
 RUN mvn clean package
 
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-ea-17-jdk-slim-buster
 
 WORKDIR /app
 
