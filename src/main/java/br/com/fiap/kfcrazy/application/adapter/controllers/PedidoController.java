@@ -89,7 +89,6 @@ public class PedidoController {
 
         pedido.setCliente(cliente);
         pedido.setProdutos(produtos);
-        // Adicione os outros campos aqui
 
         createdPedido = pedidoServicePort.create(pedido);
         } catch (RuntimeException e) {

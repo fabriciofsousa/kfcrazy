@@ -17,13 +17,6 @@ public class PreparacaoController {
 
     private final PreparacaoServicePort preparacaoServicePort;
 
-    @PostMapping("/criar")
-    public ResponseEntity<Pedido> criarPedidoFakeCheckout(@RequestBody Pedido pedido) {
-        Pedido novoPedido = preparacaoServicePort.criarPedidoFakeCheckout(pedido);
-        //return ResponseEntity.ok(novoPedido);
-        return null;
-    }
-
     @PutMapping("/enviar/{id}")
     public ResponseEntity<Pedido> enviarParaPreparacao(@PathVariable Long id) {
         Pedido pedido = preparacaoServicePort.enviarParaPreparacao(id);
