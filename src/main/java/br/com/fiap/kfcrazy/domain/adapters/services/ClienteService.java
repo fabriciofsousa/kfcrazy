@@ -31,4 +31,9 @@ public class ClienteService implements ClienteServicePort {
     public Optional<Cliente> findByCpf(String cpf) {
         return clienteRepository.findByCpf(cpf);
     }
+
+    @Override
+    public Optional<Cliente> findById(Long id) {
+        return clienteRepository.findById(id);
+    }
 }

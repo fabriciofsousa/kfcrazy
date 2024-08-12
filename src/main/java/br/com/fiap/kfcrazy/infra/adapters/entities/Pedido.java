@@ -59,4 +59,5 @@ public class Pedido {
     @JoinColumn(name = "pagamento_id", referencedColumnName = "id")
     private Pagamento pagamento;
 
+
 }

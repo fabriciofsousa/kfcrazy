@@ -1,8 +1,18 @@
 package br.com.fiap.kfcrazy.application.adapter.controllers;
 
+import br.com.fiap.kfcrazy.domain.adapters.services.ClienteService;
+import br.com.fiap.kfcrazy.domain.dto.request.IngredienteRequestDTO;
 import br.com.fiap.kfcrazy.domain.dto.request.PedidoRequestDTO;
+import br.com.fiap.kfcrazy.domain.dto.request.ProdutoRequestDTO;
+import br.com.fiap.kfcrazy.domain.exceptions.PedidoNaoEncontradoException;
+import br.com.fiap.kfcrazy.domain.ports.ClienteServicePort;
+import br.com.fiap.kfcrazy.domain.ports.IngredienteServicePort;
+import br.com.fiap.kfcrazy.domain.ports.ProdutoServicePort;
+import br.com.fiap.kfcrazy.infra.adapters.entities.Cliente;
+import br.com.fiap.kfcrazy.infra.adapters.entities.Ingrediente;
 import br.com.fiap.kfcrazy.infra.adapters.entities.Pedido;
 import br.com.fiap.kfcrazy.domain.ports.PedidoServicePort;
+import br.com.fiap.kfcrazy.infra.adapters.entities.Produto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -10,11 +20,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @AllArgsConstructor
@@ -23,6 +36,9 @@ import java.util.List;
 public class PedidoController {
 
     private final PedidoServicePort pedidoServicePort;
+    private final ClienteServicePort clienteService;
+    private final ProdutoServicePort produtoService;
+    private final IngredienteServicePort ingredienteService;
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -33,52 +49,15 @@ public class PedidoController {
                             schema = @Schema(implementation = PedidoRequestDTO.class),
                             examples = @ExampleObject(
                                     name = "Exemplo de Pedido",
-                                    summary = "Exemplo de criação de um pedido com hambúrguer clássico e refrigerante",
+                                    summary = "Exemplo de criação de um pedido com IDs de cliente e produtos",
                                     value = "{\n" +
-                                            "  \"cliente\": {\n" +
-                                            "    \"cpf\": \"12345678901\",\n" +
-                                            "    \"nome\": \"Marcelo de Nobrega\",\n" +
-                                            "    \"email\": \"marcelo.de.nobrega@gmail.com\"\n" +
-                                            "  },\n" +
+                                            "  \"clienteId\": 1,\n" +
                                             "  \"produtos\": [\n" +
                                             "    {\n" +
-                                            "      \"categoria\": \"LANCHE\",\n" +
-                                            "      \"nome\": \"Hambúrguer Clássico\",\n" +
-                                            "      \"descricao\": \"Hambúrguer com carne, queijo, alface e tomate, servido com pão fresco.\",\n" +
-                                            "      \"preco\": 50.80,\n" +
+                                            "      \"id\": 1,\n" +
                                             "      \"ingredientes\": [\n" +
-                                            "        {\n" +
-                                            "          \"nome\": \"Carne de Bovino\",\n" +
-                                            "          \"quantidade\": 1\n" +
-                                            "        },\n" +
-                                            "        {\n" +
-                                            "          \"nome\": \"Queijo Cheddar\",\n" +
-                                            "          \"quantidade\": 2\n" +
-                                            "        },\n" +
-                                            "        {\n" +
-                                            "          \"nome\": \"Alface\",\n" +
-                                            "          \"quantidade\": 1\n" +
-                                            "        },\n" +
-                                            "        {\n" +
-                                            "          \"nome\": \"Tomate\",\n" +
-                                            "          \"quantidade\": 3\n" +
-                                            "        },\n" +
-                                            "        {\n" +
-                                            "          \"nome\": \"Pão de Hambúrguer\",\n" +
-                                            "          \"quantidade\": 2\n" +
-                                            "        }\n" +
-                                            "      ]\n" +
-                                            "    },\n" +
-                                            "    {\n" +
-                                            "      \"categoria\": \"BEBIDA\",\n" +
-                                            "      \"nome\": \"Coca Cola Lata\",\n" +
-                                            "      \"descricao\": \"Refrigerante de coca cola em lata, 350ml.\",\n" +
-                                            "      \"preco\": 7.00,\n" +
-                                            "      \"ingredientes\": [\n" +
-                                            "        {\n" +
-                                            "          \"nome\": \"Lata de coca cola\",\n" +
-                                            "          \"quantidade\": 1\n" +
-                                            "        }\n" +
+                                            "        {\"id\": 1, \"quantidade\": 2},\n" +
+                                            "        {\"id\": 2, \"quantidade\": 1}\n" +
                                             "      ]\n" +
                                             "    }\n" +
                                             "  ]\n" +
@@ -87,8 +66,35 @@ public class PedidoController {
                     )
             )
     )
-    public ResponseEntity<Pedido> iniciarPedido(@RequestBody @Valid Pedido pedido) {
-        Pedido createdPedido = pedidoServicePort.create(pedido);
+    public ResponseEntity<Pedido> iniciarPedido(@RequestBody @Valid PedidoRequestDTO pedidoRequestDTO) {
+        Pedido createdPedido = null;
+        try{
+            Cliente cliente = clienteService.findById(pedidoRequestDTO.getClienteId())
+                .orElseGet(Cliente::new);
+
+        Set<Produto> produtos = new HashSet<>();
+        for (ProdutoRequestDTO produtoDTO : pedidoRequestDTO.getProdutos()) {
+            Produto produto = produtoService.findById(produtoDTO.getId())
+                    .orElseThrow(() -> new PedidoNaoEncontradoException("Produto não encontrado"));
+
+            for (IngredienteRequestDTO ingredienteDTO : produtoDTO.getIngredientes()) {
+                Ingrediente ingrediente = ingredienteService.findById(ingredienteDTO.getId())
+                        .orElseThrow(() -> new PedidoNaoEncontradoException("Ingrediente não encontrado"));
+                ingrediente.setQuantidade(String.valueOf(ingredienteDTO.getQuantidade()));
+            }
+            produtos.add(produto);
+        }
+
+        Pedido pedido = new Pedido();
+
+        pedido.setCliente(cliente);
+        pedido.setProdutos(produtos);
+        // Adicione os outros campos aqui
+
+        createdPedido = pedidoServicePort.create(pedido);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
         return new ResponseEntity<>(createdPedido, HttpStatus.CREATED);
     }
 

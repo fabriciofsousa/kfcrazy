@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface ClienteServicePort {
     Cliente criarCliente(Cliente cliente);
     List<Cliente> listarClientes();
-
+    Optional<Cliente> findById(Long id);
     Optional<Cliente> findByCpf(String cpf);
 }
