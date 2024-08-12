@@ -166,6 +166,7 @@ public class ProdutoController {
     public ResponseEntity<ProdutoResponseDTO> update(@PathVariable Long id, @RequestBody ProdutoDTO produtoDTO) {
         try {
             Produto produto = ProdutoMapper.INSTANCE.toEntity(produtoDTO);
+            produto.setIngredientes(produtoDTO.getIngredientes());
             Produto updatedProduto = produtoServicePort.update(id, produto);
             ProdutoResponseDTO responseDTO = ProdutoMapper.INSTANCE.toDto(updatedProduto);
             return ResponseEntity.ok(responseDTO);
