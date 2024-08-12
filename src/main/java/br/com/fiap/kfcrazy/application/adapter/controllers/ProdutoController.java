@@ -3,6 +3,7 @@ package br.com.fiap.kfcrazy.application.adapter.controllers;
 import br.com.fiap.kfcrazy.domain.dto.request.ProdutoDTO;
 import br.com.fiap.kfcrazy.domain.dto.response.ProdutoResponseDTO;
 import br.com.fiap.kfcrazy.domain.enums.CategoriaProduto;
+import br.com.fiap.kfcrazy.domain.mapper.IngredienteMapper;
 import br.com.fiap.kfcrazy.infra.adapters.entities.Produto;
 import br.com.fiap.kfcrazy.domain.ports.ProdutoServicePort;
 import br.com.fiap.kfcrazy.domain.mapper.ProdutoMapper;
@@ -166,7 +167,11 @@ public class ProdutoController {
     public ResponseEntity<ProdutoResponseDTO> update(@PathVariable Long id, @RequestBody ProdutoDTO produtoDTO) {
         try {
             Produto produto = ProdutoMapper.INSTANCE.toEntity(produtoDTO);
-            produto.setIngredientes(produtoDTO.getIngredientes());
+            produto.setIngredientes(
+                    produtoDTO.getIngredientes().stream()
+                            .map(ingredienteDTO -> IngredienteMapper.INSTANCE.toEntity(ingredienteDTO))
+                            .collect(Collectors.toList())
+            );
             Produto updatedProduto = produtoServicePort.update(id, produto);
             ProdutoResponseDTO responseDTO = ProdutoMapper.INSTANCE.toDto(updatedProduto);
             return ResponseEntity.ok(responseDTO);
