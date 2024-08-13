@@ -1,5 +1,13 @@
 package br.com.fiap.kfcrazy.domain.adapters.services;
 
+import br.com.fiap.kfcrazy.domain.dto.request.IngredienteRequestDTO;
+import br.com.fiap.kfcrazy.domain.dto.request.PedidoRequestDTO;
+import br.com.fiap.kfcrazy.domain.dto.request.ProdutoRequestDTO;
+import br.com.fiap.kfcrazy.domain.ports.ClienteServicePort;
+import br.com.fiap.kfcrazy.domain.ports.IngredienteServicePort;
+import br.com.fiap.kfcrazy.domain.ports.ProdutoServicePort;
+import br.com.fiap.kfcrazy.infra.adapters.entities.Cliente;
+import br.com.fiap.kfcrazy.infra.adapters.entities.Ingrediente;
 import br.com.fiap.kfcrazy.infra.adapters.entities.Produto;
 import br.com.fiap.kfcrazy.domain.enums.StatusPagamento;
 import br.com.fiap.kfcrazy.domain.exceptions.PedidoNaoEncontradoException;
@@ -13,16 +21,45 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @Service
 public class PedidoService implements PedidoServicePort {
 
     private final PedidoRepository pedidoRepository;
+    private final ProdutoServicePort produtoService;
+    private final ClienteServicePort clienteService;
+    private final IngredienteServicePort ingredienteService;
+
 
     @Override
-    public Pedido create(Pedido pedido) {
+    public Pedido create(PedidoRequestDTO pedidoRequestDTO) {
+        Cliente cliente = null;
+        if (pedidoRequestDTO.getClienteId() != null){
+            cliente = clienteService.findById(pedidoRequestDTO.getClienteId())
+                    .orElseGet(null);
+        }
+
+        Set<Produto> produtos = new HashSet<>();
+        for (ProdutoRequestDTO produtoDTO : pedidoRequestDTO.getProdutos()) {
+            Produto produto = produtoService.findById(produtoDTO.getId())
+                    .orElseThrow(() -> new PedidoNaoEncontradoException("Produto não encontrado"));
+
+            for (IngredienteRequestDTO ingredienteDTO : produtoDTO.getIngredientes()) {
+                Ingrediente ingrediente = ingredienteService.findById(ingredienteDTO.getId())
+                        .orElseThrow(() -> new PedidoNaoEncontradoException("Ingrediente não encontrado"));
+                ingrediente.setQuantidade(String.valueOf(ingredienteDTO.getQuantidade()));
+            }
+            produtos.add(produto);
+        }
+
+        Pedido pedido = new Pedido();
+
+        pedido.setCliente(cliente);
+        pedido.setProdutos(produtos);
 
         pedido.setDataTransacao(LocalDateTime.now());
 
@@ -52,9 +89,11 @@ public class PedidoService implements PedidoServicePort {
 
 
     @Override
-    public void delete(Long id) {
+    public void cancelar(Long id) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new PedidoNaoEncontradoException("Pedido não encontrado!"));
-        pedidoRepository.delete(pedido);
+        pedido.setStatusPedido(StatusPedido.CANCELADO);
+        pedido.setStatusPagamento(StatusPagamento.CANCELADO);
+        pedidoRepository.save(pedido);
     }
 }

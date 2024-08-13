@@ -38,33 +38,50 @@ public class ProdutoController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             schema = @Schema(implementation = ProdutoDTO.class),
-                            examples = @ExampleObject(
-                                    name = "Exemplo de Hambúrguer",
-                                    summary = "Exemplo de criação de hambúrguer clássico",
-                                    value = "{\n" +
-                                            "    \"categoria\": \"LANCHE\",\n" +
-                                            "    \"nome\": \"Hambúrguer Clássico\",\n" +
-                                            "    \"descricao\": \"Hambúrguer com carne, queijo, alface e tomate, servido com pão fresco.\",\n" +
-                                            "    \"preco\": 22.00,\n" +
-                                            "    \"ingredientes\": [\n" +
-                                            "        {\n" +
-                                            "            \"nome\": \"Carne de Bovino\"\n" +
-                                            "        },\n" +
-                                            "        {\n" +
-                                            "            \"nome\": \"Queijo Cheddar\"\n" +
-                                            "        },\n" +
-                                            "        {\n" +
-                                            "            \"nome\": \"Alface\"\n" +
-                                            "        },\n" +
-                                            "        {\n" +
-                                            "            \"nome\": \"Tomate\"\n" +
-                                            "        },\n" +
-                                            "        {\n" +
-                                            "            \"nome\": \"Pão de Hambúrguer\"\n" +
-                                            "        }\n" +
-                                            "    ]\n" +
-                                            "}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "Exemplo de Hambúrguer",
+                                            summary = "Exemplo de criação de hambúrguer clássico",
+                                            value = "{\n" +
+                                                    "    \"categoria\": \"LANCHE\",\n" +
+                                                    "    \"nome\": \"Hambúrguer Clássico\",\n" +
+                                                    "    \"descricao\": \"Hambúrguer com carne, queijo, alface e tomate, servido com pão fresco.\",\n" +
+                                                    "    \"preco\": 22.00,\n" +
+                                                    "    \"ingredientes\": [\n" +
+                                                    "        {\n" +
+                                                    "            \"nome\": \"Carne de Bovino\"\n" +
+                                                    "        },\n" +
+                                                    "        {\n" +
+                                                    "            \"nome\": \"Queijo Cheddar\"\n" +
+                                                    "        },\n" +
+                                                    "        {\n" +
+                                                    "            \"nome\": \"Alface\"\n" +
+                                                    "        },\n" +
+                                                    "        {\n" +
+                                                    "            \"nome\": \"Tomate\"\n" +
+                                                    "        },\n" +
+                                                    "        {\n" +
+                                                    "            \"nome\": \"Pão de Hambúrguer\"\n" +
+                                                    "        }\n" +
+                                                    "    ]\n" +
+                                                    "}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "Exemplo de Bebida",
+                                            summary = "Exemplo de criação de refrigerante Coca Cola",
+                                            value = "{\n" +
+                                                    "    \"categoria\": \"BEBIDA\",\n" +
+                                                    "    \"nome\": \"Coca Cola Lata\",\n" +
+                                                    "    \"descricao\": \"Refrigerante Coca Cola em lata de 350ml.\",\n" +
+                                                    "    \"preco\": 10.00,\n" +
+                                                    "    \"ingredientes\": [\n" +
+                                                    "        {\n" +
+                                                    "            \"nome\": \"Coca Cola Lata 350ml\"\n" +
+                                                    "        }\n" +
+                                                    "    ]\n" +
+                                                    "}"
+                                    )
+                            }
                     )
             ),
             responses = {
@@ -145,15 +162,11 @@ public class ProdutoController {
                                             "    },\n" +
                                             "    {\n" +
                                             "      \"id\": 4,\n" +
-                                            "      \"nome\": \"Tomate\"\n" +
+                                            "      \"nome\": \"Bacon\"\n" +
                                             "    },\n" +
                                             "    {\n" +
                                             "      \"id\": 5,\n" +
                                             "      \"nome\": \"Pão de Hambúrguer\"\n" +
-                                            "    },\n" +
-                                            "    {\n" +
-                                            "      \"id\": 6,\n" +
-                                            "      \"nome\": \"Bacon\"\n" +
                                             "    }\n" +
                                             "  ]\n" +
                                             "}"

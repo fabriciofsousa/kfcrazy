@@ -36,9 +36,6 @@ import java.util.Set;
 public class PedidoController {
 
     private final PedidoServicePort pedidoServicePort;
-    private final ClienteServicePort clienteService;
-    private final ProdutoServicePort produtoService;
-    private final IngredienteServicePort ingredienteService;
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -60,8 +57,7 @@ public class PedidoController {
                                             "        {\"id\": 2, \"quantidade\": 1},\n" +
                                             "        {\"id\": 3, \"quantidade\": 1},\n" +
                                             "        {\"id\": 4, \"quantidade\": 1},\n" +
-                                            "        {\"id\": 5, \"quantidade\": 1},\n" +
-                                            "        {\"id\": 6, \"quantidade\": 1}\n" +
+                                            "        {\"id\": 5, \"quantidade\": 1}\n" +
                                             "      ]\n" +
                                             "    }\n" +
                                             "  ]\n" +
@@ -73,28 +69,9 @@ public class PedidoController {
     public ResponseEntity<Pedido> iniciarPedido(@RequestBody @Valid PedidoRequestDTO pedidoRequestDTO) {
         Pedido createdPedido = null;
         try{
-            Cliente cliente = clienteService.findById(pedidoRequestDTO.getClienteId())
-                    .orElseGet(Cliente::new);
 
-            Set<Produto> produtos = new HashSet<>();
-            for (ProdutoRequestDTO produtoDTO : pedidoRequestDTO.getProdutos()) {
-                Produto produto = produtoService.findById(produtoDTO.getId())
-                        .orElseThrow(() -> new PedidoNaoEncontradoException("Produto não encontrado"));
 
-                for (IngredienteRequestDTO ingredienteDTO : produtoDTO.getIngredientes()) {
-                    Ingrediente ingrediente = ingredienteService.findById(ingredienteDTO.getId())
-                            .orElseThrow(() -> new PedidoNaoEncontradoException("Ingrediente não encontrado"));
-                    ingrediente.setQuantidade(String.valueOf(ingredienteDTO.getQuantidade()));
-                }
-                produtos.add(produto);
-            }
-
-            Pedido pedido = new Pedido();
-
-            pedido.setCliente(cliente);
-            pedido.setProdutos(produtos);
-
-            createdPedido = pedidoServicePort.create(pedido);
+            createdPedido = pedidoServicePort.create(pedidoRequestDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
@@ -119,9 +96,9 @@ public class PedidoController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @Operation(description = "Deletar pedido por ID")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        pedidoServicePort.delete(id);
+    @Operation(description = "cancelar pedido por ID")
+    public ResponseEntity<Void> cancelar(@PathVariable("id") Long id) {
+        pedidoServicePort.cancelar(id);
         return ResponseEntity.noContent().build();
     }
 }
