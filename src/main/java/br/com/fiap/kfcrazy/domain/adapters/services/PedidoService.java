@@ -64,7 +64,6 @@ public class PedidoService implements PedidoServicePort {
         pedido.setDataTransacao(LocalDateTime.now());
 
         pedido.setStatusPagamento(StatusPagamento.PENDENTE);
-        //fake checkout
         pedido.setStatusPedido(StatusPedido.EM_PROCESSAMENTO);
 
         BigDecimal valorTotal = BigDecimal.ZERO;

@@ -43,7 +43,6 @@ public class PreparacaoService implements PreparacaoServicePort {
         if (pedidoOptional.isPresent()) {
             Pedido pedido = pedidoOptional.get();
             if (pedido.getStatusPedido() == StatusPedido.EM_PREPARACAO) {
-                // Aqui você pode adicionar lógica para iniciar a preparação do pedido
                 pedido.setStatusPedido(StatusPedido.PRONTO);
                 return pedidoRepository.save(pedido);
             }

@@ -45,13 +45,11 @@ public class ProdutoService implements ProdutoServicePort {
         Produto produtoExistente = produtoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
-        // Atualiza os detalhes do produto
         produtoExistente.setCategoria(produtoDTO.getCategoria());
         produtoExistente.setNome(produtoDTO.getNome());
         produtoExistente.setDescricao(produtoDTO.getDescricao());
         produtoExistente.setPreco(produtoDTO.getPreco());
 
-        // Atualiza ou adiciona os ingredientes
         for (IngredienteDTO ingredienteDTO : produtoDTO.getIngredientes()) {
             Ingrediente ingredienteExistente = produtoExistente.getIngredientes().stream()
                     .filter(ing -> ing.getId().equals(ingredienteDTO.getId()))
@@ -59,10 +57,8 @@ public class ProdutoService implements ProdutoServicePort {
                     .orElse(null);
 
             if (ingredienteExistente != null) {
-                // Atualiza o ingrediente existente
                 ingredienteExistente.setNome(ingredienteDTO.getNome());
             } else {
-                // Adiciona um novo ingrediente
                 Ingrediente novoIngrediente = IngredienteMapper.INSTANCE.toEntity(ingredienteDTO);
                 novoIngrediente.setProduto(produtoExistente);
                 produtoExistente.getIngredientes().add(novoIngrediente);
