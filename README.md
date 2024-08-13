@@ -7,9 +7,10 @@ O projeto KFCrazy é uma aplicação para um sistema de autoatendimento para res
 ## Domain-Driven Design (DDD)
 
 O modelo de Domain-Driven Design (DDD) do projeto está disponível no Miro. Por favor, consulte o link fornecido para obter mais detalhes sobre a estrutura e os conceitos utilizados.
-URL: https://miro.com/app/board/uXjVKva4Vcc=/
 
-## Instruções para Rodar a Aplicação
+URL: [https://miro.com/app/board/uXjVKva4Vcc=/](https://miro.com/app/board/uXjVKva4Vcc=/)
+
+## Instruções para Executar a Aplicação
 
 Para rodar a aplicação, siga os comandos abaixo:
 
@@ -32,6 +33,12 @@ Para rodar a aplicação, siga os comandos abaixo:
 5. Inicie os serviços com Docker Compose:
    ```bash
    docker compose up
+
+## Swagger
+
+Você pode testar e documentar a API usando o Swagger. A URL do Swagger para acessar a documentação da API é:
+
+URL: [[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)]
 
 ## Contato
 
