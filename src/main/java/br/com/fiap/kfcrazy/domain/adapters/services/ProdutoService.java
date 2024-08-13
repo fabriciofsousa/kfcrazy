@@ -1,6 +1,10 @@
 package br.com.fiap.kfcrazy.domain.adapters.services;
 
+import br.com.fiap.kfcrazy.domain.dto.request.IngredienteDTO;
+import br.com.fiap.kfcrazy.domain.dto.request.ProdutoDTO;
 import br.com.fiap.kfcrazy.domain.enums.CategoriaProduto;
+import br.com.fiap.kfcrazy.domain.mapper.IngredienteMapper;
+import br.com.fiap.kfcrazy.domain.mapper.ProdutoMapper;
 import br.com.fiap.kfcrazy.infra.adapters.entities.Ingrediente;
 import br.com.fiap.kfcrazy.infra.adapters.entities.Produto;
 import br.com.fiap.kfcrazy.infra.adapters.repository.ProdutoRepository;
@@ -37,13 +41,39 @@ public class ProdutoService implements ProdutoServicePort {
     }
 
     @Override
-    public Produto update(Long id, Produto produto) {
-        if (!produtoRepository.existsById(id)) {
-            throw new RuntimeException("Produto não encontrado");
+    public Produto update(Long id, ProdutoDTO produtoDTO) {
+        Produto produtoExistente = produtoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        // Atualiza os detalhes do produto
+        produtoExistente.setCategoria(produtoDTO.getCategoria());
+        produtoExistente.setNome(produtoDTO.getNome());
+        produtoExistente.setDescricao(produtoDTO.getDescricao());
+        produtoExistente.setPreco(produtoDTO.getPreco());
+
+        // Atualiza ou adiciona os ingredientes
+        for (IngredienteDTO ingredienteDTO : produtoDTO.getIngredientes()) {
+            Ingrediente ingredienteExistente = produtoExistente.getIngredientes().stream()
+                    .filter(ing -> ing.getId().equals(ingredienteDTO.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (ingredienteExistente != null) {
+                // Atualiza o ingrediente existente
+                ingredienteExistente.setNome(ingredienteDTO.getNome());
+            } else {
+                // Adiciona um novo ingrediente
+                Ingrediente novoIngrediente = IngredienteMapper.INSTANCE.toEntity(ingredienteDTO);
+                novoIngrediente.setProduto(produtoExistente);
+                produtoExistente.getIngredientes().add(novoIngrediente);
+            }
         }
-        produto.setId(id);
-        return produtoRepository.save(produto);
+
+        return produtoRepository.save(produtoExistente);
     }
+
+
+
 
     @Override
     public List<Produto> getByCategoria(CategoriaProduto categoriaProduto) {

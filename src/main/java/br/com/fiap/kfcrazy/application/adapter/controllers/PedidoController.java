@@ -57,7 +57,11 @@ public class PedidoController {
                                             "      \"id\": 1,\n" +
                                             "      \"ingredientes\": [\n" +
                                             "        {\"id\": 1, \"quantidade\": 2},\n" +
-                                            "        {\"id\": 2, \"quantidade\": 1}\n" +
+                                            "        {\"id\": 2, \"quantidade\": 1},\n" +
+                                            "        {\"id\": 3, \"quantidade\": 1},\n" +
+                                            "        {\"id\": 4, \"quantidade\": 1},\n" +
+                                            "        {\"id\": 5, \"quantidade\": 1},\n" +
+                                            "        {\"id\": 6, \"quantidade\": 1}\n" +
                                             "      ]\n" +
                                             "    }\n" +
                                             "  ]\n" +
@@ -70,27 +74,27 @@ public class PedidoController {
         Pedido createdPedido = null;
         try{
             Cliente cliente = clienteService.findById(pedidoRequestDTO.getClienteId())
-                .orElseGet(Cliente::new);
+                    .orElseGet(Cliente::new);
 
-        Set<Produto> produtos = new HashSet<>();
-        for (ProdutoRequestDTO produtoDTO : pedidoRequestDTO.getProdutos()) {
-            Produto produto = produtoService.findById(produtoDTO.getId())
-                    .orElseThrow(() -> new PedidoNaoEncontradoException("Produto não encontrado"));
+            Set<Produto> produtos = new HashSet<>();
+            for (ProdutoRequestDTO produtoDTO : pedidoRequestDTO.getProdutos()) {
+                Produto produto = produtoService.findById(produtoDTO.getId())
+                        .orElseThrow(() -> new PedidoNaoEncontradoException("Produto não encontrado"));
 
-            for (IngredienteRequestDTO ingredienteDTO : produtoDTO.getIngredientes()) {
-                Ingrediente ingrediente = ingredienteService.findById(ingredienteDTO.getId())
-                        .orElseThrow(() -> new PedidoNaoEncontradoException("Ingrediente não encontrado"));
-                ingrediente.setQuantidade(String.valueOf(ingredienteDTO.getQuantidade()));
+                for (IngredienteRequestDTO ingredienteDTO : produtoDTO.getIngredientes()) {
+                    Ingrediente ingrediente = ingredienteService.findById(ingredienteDTO.getId())
+                            .orElseThrow(() -> new PedidoNaoEncontradoException("Ingrediente não encontrado"));
+                    ingrediente.setQuantidade(String.valueOf(ingredienteDTO.getQuantidade()));
+                }
+                produtos.add(produto);
             }
-            produtos.add(produto);
-        }
 
-        Pedido pedido = new Pedido();
+            Pedido pedido = new Pedido();
 
-        pedido.setCliente(cliente);
-        pedido.setProdutos(produtos);
+            pedido.setCliente(cliente);
+            pedido.setProdutos(produtos);
 
-        createdPedido = pedidoServicePort.create(pedido);
+            createdPedido = pedidoServicePort.create(pedido);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }

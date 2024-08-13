@@ -28,4 +28,8 @@ public class Ingrediente {
     @Column(nullable = true)
     private String quantidade;
 
+    public Ingrediente(Long id, String quantidade) {
+        this.id = id;
+        this.quantidade = quantidade;
+    }
 }

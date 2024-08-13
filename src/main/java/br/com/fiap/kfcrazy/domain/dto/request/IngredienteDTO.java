@@ -11,4 +11,6 @@ public class IngredienteDTO {
 
     private String nome;
 
+    private Long id;
+
 }

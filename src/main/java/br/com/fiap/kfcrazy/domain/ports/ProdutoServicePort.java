@@ -1,5 +1,6 @@
 package br.com.fiap.kfcrazy.domain.ports;
 
+import br.com.fiap.kfcrazy.domain.dto.request.ProdutoDTO;
 import br.com.fiap.kfcrazy.domain.enums.CategoriaProduto;
 import br.com.fiap.kfcrazy.infra.adapters.entities.Produto;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ public interface ProdutoServicePort {
 
     List<Produto> findAll();
 
-    Produto update(Long id, Produto produto);
+    Produto update(Long id, ProdutoDTO produto);
 
     List<Produto> getByCategoria(CategoriaProduto categoriaProduto);
 

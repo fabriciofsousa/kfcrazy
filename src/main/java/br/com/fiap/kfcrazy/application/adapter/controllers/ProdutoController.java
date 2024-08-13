@@ -4,6 +4,7 @@ import br.com.fiap.kfcrazy.domain.dto.request.ProdutoDTO;
 import br.com.fiap.kfcrazy.domain.dto.response.ProdutoResponseDTO;
 import br.com.fiap.kfcrazy.domain.enums.CategoriaProduto;
 import br.com.fiap.kfcrazy.domain.mapper.IngredienteMapper;
+import br.com.fiap.kfcrazy.infra.adapters.entities.Ingrediente;
 import br.com.fiap.kfcrazy.infra.adapters.entities.Produto;
 import br.com.fiap.kfcrazy.domain.ports.ProdutoServicePort;
 import br.com.fiap.kfcrazy.domain.mapper.ProdutoMapper;
@@ -60,9 +61,6 @@ public class ProdutoController {
                                             "        },\n" +
                                             "        {\n" +
                                             "            \"nome\": \"Pão de Hambúrguer\"\n" +
-                                            "        },\n" +
-                                            "        {\n" +
-                                            "            \"nome\": \"Refrigerante Coca-Cola Lata\"\n" +
                                             "        }\n" +
                                             "    ]\n" +
                                             "}"
@@ -125,8 +123,8 @@ public class ProdutoController {
                     content = @Content(
                             schema = @Schema(implementation = ProdutoDTO.class),
                             examples = @ExampleObject(
-                                    name = "Exemplo de alteracao de Hambúrguer",
-                                    summary = "Exemplo de alteracao de hambúrguer clássico para hambúrguer clássico com Bacon",
+                                    name = "Exemplo de alteração de Hambúrguer",
+                                    summary = "Exemplo de alteração de hambúrguer clássico para hambúrguer clássico com Bacon",
                                     value = "{\n" +
                                             "  \"categoria\": \"LANCHE\",\n" +
                                             "  \"nome\": \"Hambúrguer Clássico com Bacon\",\n" +
@@ -134,25 +132,28 @@ public class ProdutoController {
                                             "  \"preco\": 88,\n" +
                                             "  \"ingredientes\": [\n" +
                                             "    {\n" +
+                                            "      \"id\": 1,\n" +
                                             "      \"nome\": \"Carne de Bovino\"\n" +
                                             "    },\n" +
                                             "    {\n" +
+                                            "      \"id\": 2,\n" +
                                             "      \"nome\": \"Queijo Cheddar\"\n" +
                                             "    },\n" +
                                             "    {\n" +
+                                            "      \"id\": 3,\n" +
                                             "      \"nome\": \"Alface\"\n" +
                                             "    },\n" +
                                             "    {\n" +
+                                            "      \"id\": 4,\n" +
                                             "      \"nome\": \"Tomate\"\n" +
                                             "    },\n" +
                                             "    {\n" +
+                                            "      \"id\": 5,\n" +
                                             "      \"nome\": \"Pão de Hambúrguer\"\n" +
                                             "    },\n" +
                                             "    {\n" +
+                                            "      \"id\": 6,\n" +
                                             "      \"nome\": \"Bacon\"\n" +
-                                            "    },\n" +
-                                            "    {\n" +
-                                            "      \"nome\": \"Refrigerante Coca-Cola Lata\"\n" +
                                             "    }\n" +
                                             "  ]\n" +
                                             "}"
@@ -166,19 +167,15 @@ public class ProdutoController {
     )
     public ResponseEntity<ProdutoResponseDTO> update(@PathVariable Long id, @RequestBody ProdutoDTO produtoDTO) {
         try {
-            Produto produto = ProdutoMapper.INSTANCE.toEntity(produtoDTO);
-            produto.setIngredientes(
-                    produtoDTO.getIngredientes().stream()
-                            .map(ingredienteDTO -> IngredienteMapper.INSTANCE.toEntity(ingredienteDTO))
-                            .collect(Collectors.toList())
-            );
-            Produto updatedProduto = produtoServicePort.update(id, produto);
+            Produto updatedProduto = produtoServicePort.update(id, produtoDTO);
             ProdutoResponseDTO responseDTO = ProdutoMapper.INSTANCE.toDto(updatedProduto);
             return ResponseEntity.ok(responseDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 
     @Operation(summary = "Remove um produto pelo ID")
     @ApiResponses(value = {

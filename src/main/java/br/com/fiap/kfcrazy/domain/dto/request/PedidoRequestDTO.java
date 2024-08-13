@@ -13,7 +13,6 @@ import java.util.Set;
 @Data
 public class PedidoRequestDTO {
 
-    @NotNull(message = "O ID do cliente é obrigatório.")
     private Long clienteId;
 
     @NotNull(message = "A lista de produtos é obrigatória.")
